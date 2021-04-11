@@ -1,0 +1,144 @@
+{% load static %}
+<!DOCTYPE html>
+
+<html>
+<head>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="{% static 'shop/style.css' %}">
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<title>Page Title</title>
+
+</head>
+<body>
+        <div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<nav class="navbar navbar-expand-lg navbar-light bg-light">
+						<a class="navbar-brand" href="#">Navbar</a>
+						<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+						  <span class="navbar-toggler-icon"></span>
+						</button>
+						<div class="collapse navbar-collapse" id="navbarNav">
+						  <ul class="navbar-nav">
+							<li class="nav-item active">
+							  <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+							</li>
+							<li class="nav-item">
+							  <a class="nav-link" href="#">Features</a>
+							</li>
+							<button id="cart" type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="bottom" data-content="Shivam">cart(0)
+								
+							</button>
+							<li class="nav-item">
+							  <a class="nav-link disabled" href="#">Disabled</a>
+							</li>
+						  </ul>
+						</div>
+					  </nav>
+				</div>
+
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<form class="card card-sm">
+						<div class="card-body row no gtters align-items-centre">
+							<div class='col'>
+								<input type="search" name="item_name" placeholder="search bar" class="form-control form-control-borderless">
+								<div class="col-auto">
+									<button class="btn btn-success">search</button>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="row">
+			{%for product in product_objects%}
+			<div class="col-md-3">
+				<div class="card">
+					<img src="{{product.image}}" class="card-img-top">
+					<div class="card-body">
+						<div class="card-title">
+							{{product.title}}
+						</div>
+						<div class="card-text">
+							{{product.price}}
+						</div>	
+						<a href="/{{product.id}}" class="btn btn-warning">view</a>
+						<button id ="{{product.id}}" class="btn atc btn-warning">Add to cart</button>
+					</div>
+				</div>
+			</div>
+			{%endfor%}
+			
+		</div>
+		<div class="row">
+			<div class="col-md-3" offset-md-4>
+				<ul class="pagination">
+					{%if product_objects.has_previous %}
+					<li class="page-item">
+						<a class="page-link" href="?page={{ product_objects.previous_page_number}}">previous</a>
+					</li>
+					{%endif%}
+
+					<li class="page-item active">
+						<a class="page-link" href="?page={{ product_objects.number}}">current</a>
+					</li>
+					{% if  product_objects.has_next %}
+					<li class="page-item">
+						<a class="page-link" href="?page={{ product_objects.next_page_number}}">next</a>
+					</li>
+					{%endif%}
+				</ul>
+			</div>
+		</div>
+		
+	
+    </div>
+
+
+
+</body>
+<script type="text/javascript">
+	console.log('This is working');
+	if (localStorage.getItem('cart')==null){
+		var cart={};     /* here where are checking if cart is there are or not, then we are creating Json object*/
+	}
+	else{
+		cart=JSON.parse(localStorage.getItem('cart'));
+	}
+	$(document).on('click','.atc',function(){  /* class can call using ., so we r using .atc  */
+		console.log("add to cart button is clicked");
+		var item_id=this.id.toString(); /*  here 'id' is use button id , which is reference of product_id */
+		console.log(item_id);   /* we are trying to get button id click */
+
+		if(cart[item_id]!=undefined){
+			cart[item_id]=cart[item_id]+1;
+		}
+		else{
+			cart[item_id]=1;
+		}
+		console.log(cart);
+		localStorage.setItem('cart',JSON.stringify(cart)); /* here we are saving the data, using setitem */
+		/* in setitem we pass key and value  */
+		document.getElementById("cart").innerHTML="cart("+ Object.keys(cart).length +")";
+		/*console.log(Object.keys(cart).length); */ /* here where are counting total length of cart */
+	});
+	$(function () {
+  $('[data-toggle="popover"]').popover()
+});
+
+ /* we ahave added a pop over function */
+
+</script>
+</html>
+
+
+
+
+
+        
